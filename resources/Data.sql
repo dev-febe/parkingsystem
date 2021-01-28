@@ -1,4 +1,5 @@
 /* Setting up PROD DB */
+/* Setting up TEST DB */
 create database prod;
 use prod;
 
