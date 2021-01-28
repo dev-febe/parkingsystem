@@ -43,7 +43,7 @@ public class ParkingDataBaseIT {
     @BeforeEach
     private void setUpPerTest() throws Exception {
         when(inputReaderUtil.readSelection()).thenReturn(1);
-        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEFHK");
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABNB");
         dataBasePrepareService.clearDataBaseEntries();
     }
 
@@ -77,10 +77,22 @@ public class ParkingDataBaseIT {
         Ticket ticket = ticketDAO.getTicket(registrationNumber);
         ticket.setInTime(inTime);
         ticketDAO.updateInTimeTicket(ticket);
-
+        logger.info("ticket.getDiscount()");
+        logger.info(ticket.getDiscount());
         parkingService.processExitingVehicle();
         ticket = ticketDAO.getTicket(registrationNumber);
         assertNotNull(ticket.getOutTime());
-        assertEquals(ticket.getPrice(), (double) (24.0 * Fare.CAR_RATE_PER_HOUR));
+        assertEquals(ticket.getPrice(), 24.0 * Fare.CAR_RATE_PER_HOUR * ticket.getDiscount()/100);
+    }
+
+    @Test
+    public void testParkingARecurrenceForDiscount() throws Exception {
+        // first visit
+        testParkingLotExit();
+        // next visit
+        testParkingLotExit();
+        Ticket ticket = ticketDAO.getTicket(inputReaderUtil.readVehicleRegistrationNumber());
+
+        assertEquals(5, ticket.getDiscount());
     }
 }
