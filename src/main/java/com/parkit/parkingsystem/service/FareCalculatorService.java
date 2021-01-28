@@ -16,6 +16,10 @@ public class FareCalculatorService {
                 ticket.getOutTime()
         );
 
+        // Free parking when duration is under 30 minutes
+        if (durationPerHours <= 0.5) {
+            durationPerHours = 0;
+        }
 
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
