@@ -7,7 +7,6 @@ import com.parkit.parkingsystem.util.DateUtil;
 public class FareCalculatorService {
     public void calculateFare(Ticket ticket) {
         if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
-
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString() + " intime " + ticket.getInTime());
         }
 
@@ -21,13 +20,14 @@ public class FareCalculatorService {
             durationPerHours = 0;
         }
 
+
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
-                ticket.setPrice(durationPerHours * Fare.CAR_RATE_PER_HOUR);
+                ticket.setPrice(durationPerHours * ticket.getDiscount()/100 * Fare.CAR_RATE_PER_HOUR);
                 break;
             }
             case BIKE: {
-                ticket.setPrice(durationPerHours * Fare.BIKE_RATE_PER_HOUR);
+                ticket.setPrice(durationPerHours * ticket.getDiscount()/100 * Fare.BIKE_RATE_PER_HOUR);
                 break;
             }
             default:

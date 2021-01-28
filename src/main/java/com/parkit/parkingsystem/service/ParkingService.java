@@ -1,5 +1,6 @@
 package com.parkit.parkingsystem.service;
 
+import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -38,11 +39,17 @@ public class ParkingService {
                 String vehicleRegNumber = getVehicleRegNumber();
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
-
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
                 //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
                 //ticket.setId(ticketID);
+                double discount = this.getTicketDiscount(vehicleRegNumber);
+                logger.info("discount");
+                logger.info(discount);
+                if (discount > 1) {
+                    System.out.println("Welcome back! As a recurring user of our parking lot, you'll benefit from a " + discount + "% discount.");
+                    ticket.setDiscount(discount);
+                }
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setPrice(0);
@@ -120,5 +127,13 @@ public class ParkingService {
         } catch (Exception e) {
             logger.error("Unable to process exiting vehicle", e);
         }
+    }
+
+    private double getTicketDiscount(String vehicleRegNumber) {
+        Ticket ticket = ticketDAO.getPreviousTicket(vehicleRegNumber);
+        double discount = 1;
+        if (ticket != null)
+            discount = Fare.RATE_DISCOUNT;
+        return discount;
     }
 }
