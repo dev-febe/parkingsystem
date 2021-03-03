@@ -18,7 +18,6 @@ public class InputReaderUtil {
      * @return the given input
      */
     public int readSelection() {
-        logger.info("input");
         try {
             return scan.nextInt();
         } catch (Exception e) {

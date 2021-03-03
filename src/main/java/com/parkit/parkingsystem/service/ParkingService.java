@@ -12,15 +12,18 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 
+/**
+ * Service for Parking
+ */
 public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger(ParkingService.class);
 
-    private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
+    private static final FareCalculatorService fareCalculatorService = new FareCalculatorService();
 
-    private InputReaderUtil inputReaderUtil;
-    private ParkingSpotDAO parkingSpotDAO;
-    private TicketDAO ticketDAO;
+    private final InputReaderUtil inputReaderUtil;
+    private final ParkingSpotDAO parkingSpotDAO;
+    private final TicketDAO ticketDAO;
 
     public ParkingService(
             InputReaderUtil inputReaderUtil,
@@ -46,7 +49,7 @@ public class ParkingService {
                 double discount = this.getTicketDiscount(vehicleRegNumber);
                 logger.info("discount");
                 logger.info(discount);
-                if (discount > 1) {
+                if (discount < 1) {
                     System.out.println("Welcome back! As a recurring user of our parking lot, you'll benefit from a " + discount + "% discount.");
                     ticket.setDiscount(discount);
                 }
@@ -129,7 +132,7 @@ public class ParkingService {
         }
     }
 
-    private double getTicketDiscount(String vehicleRegNumber) {
+    public double getTicketDiscount(String vehicleRegNumber) {
         Ticket ticket = ticketDAO.getPreviousTicket(vehicleRegNumber);
         double discount = 1;
         if (ticket != null)

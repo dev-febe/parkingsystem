@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Properties configuration
+ * Create new properties config instance for database
+ */
 public class PropertiesConfig {
     private String username;
     private String password;

@@ -6,10 +6,13 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Service for interactiveShell
+ */
 public class InteractiveShell {
     private static final Logger logger = LogManager.getLogger(InteractiveShell.class);
 
-    public static void loadInterface() {
+    public boolean loadInterface() {
         logger.info("App initialized!!!");
         System.out.println("Welcome to Parking System!");
 
@@ -40,6 +43,8 @@ public class InteractiveShell {
                     System.out.println("Unsupported option. Please enter a number corresponding to the provided menu");
             }
         }
+
+        return true;
     }
 
     private static void loadMenu() {

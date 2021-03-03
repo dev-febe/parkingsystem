@@ -13,13 +13,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 
+/**
+ * Ticket DAO
+ * Manage the logic of Ticket model
+ */
 public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger(TicketDAO.class);
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
-    public void saveTicket(Ticket ticket) {
+    public boolean saveTicket(Ticket ticket) {
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
@@ -33,11 +37,18 @@ public class TicketDAO {
             ps.setTimestamp(5, (ticket.getOutTime() == null) ? null : (new Timestamp(ticket.getOutTime().getTime())));
             ps.setDouble(6, ticket.getDiscount());
             ps.execute();
-        } catch (Exception ex) {
-            logger.error("Error fetching next available slot", ex);
+            boolean result = ps.executeUpdate() == 1;
+            dataBaseConfig.closePreparedStatement(ps);
+            return result;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error fetching next available slot", e);
         } finally {
-            dataBaseConfig.closeConnection(con);
+            if (con != null)
+                dataBaseConfig.closeConnection(con);
         }
+        return true;
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
@@ -62,10 +73,13 @@ public class TicketDAO {
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
-        } catch (Exception ex) {
-            logger.error("Error fetching next available slot", ex);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error fetching next available slot", e);
         } finally {
-            dataBaseConfig.closeConnection(con);
+            if (con != null)
+                dataBaseConfig.closeConnection(con);
         }
         return ticket;
     }
@@ -92,10 +106,13 @@ public class TicketDAO {
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
-        } catch (Exception ex) {
-            logger.error("Error fetching next available slot", ex);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error fetching next available slot", e);
         } finally {
-            dataBaseConfig.closeConnection(con);
+            if (con != null)
+                dataBaseConfig.closeConnection(con);
         }
         return ticket;
     }
@@ -110,16 +127,21 @@ public class TicketDAO {
             ps.setTimestamp(3, new Timestamp(ticket.getOutTime().getTime()));
             ps.setInt(4, ticket.getId());
             ps.execute();
-            return true;
-        } catch (Exception ex) {
-            logger.error("Error saving ticket info", ex);
+            boolean result = ps.executeUpdate() == 1;
+            dataBaseConfig.closePreparedStatement(ps);
+            return result;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error fetching next available slot", e);
         } finally {
-            dataBaseConfig.closeConnection(con);
+            if (con != null)
+                dataBaseConfig.closeConnection(con);
         }
-        return false;
+        return true;
     }
 
-    public void updateInTimeTicket(Ticket ticket) {
+    public boolean updateInTimeTicket(Ticket ticket) {
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
@@ -127,10 +149,18 @@ public class TicketDAO {
             ps.setTimestamp(1, new Timestamp(ticket.getInTime().getTime()));
             ps.setInt(2, ticket.getId());
             ps.execute();
-        } catch (Exception ex) {
-            logger.error("Error saving ticket info", ex);
+            boolean result = ps.executeUpdate() == 1;
+            dataBaseConfig.closePreparedStatement(ps);
+            return result;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error fetching next available slot", e);
         } finally {
-            dataBaseConfig.closeConnection(con);
+            if (con != null)
+                dataBaseConfig.closeConnection(con);
         }
+
+        return true;
     }
 }

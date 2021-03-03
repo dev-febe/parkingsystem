@@ -3,7 +3,6 @@ version: '3'
 services:
   mysql:
     image: mysql:5.7
-    container_name: db
     volumes:
       - ./resources/Data.sql:/docker-entrypoint-initdb.d/Data.sql
     environment:

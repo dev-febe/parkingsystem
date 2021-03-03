@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -21,13 +22,12 @@ public class DateUtilTest {
         assertNotNull(localDateTime);
     }
 
-    @ParameterizedTest(name = "The duration of {0}h must be {0}h")
-    @ValueSource(ints = {1, 2, 42, 1011, 5089})
-    public void getDurationPerHours_shouldGetHalfHour(long hour) {
+    @Test
+    public void getDurationPerHours_shouldGetHalfHour() {
         Date starTDate = new Date();
-        starTDate.setTime(System.currentTimeMillis() - hour * 60 * 60 * 1000);
+        starTDate.setTime(System.currentTimeMillis() - 2 * 60 * 60 * 1000);
         Date endDate = new Date();
         double duration = DateUtil.getDurationPerHours(starTDate, endDate);
-        assertEquals(duration, hour);
+        assertEquals(duration, 2);
     }
 }

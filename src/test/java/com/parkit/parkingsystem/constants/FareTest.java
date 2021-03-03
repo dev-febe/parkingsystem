@@ -20,4 +20,12 @@ public class FareTest {
                 1.5
         );
     }
+
+    @Test
+    public void RateDiscount_shouldBe_0_5() {
+        assertEquals(
+                Fare.RATE_DISCOUNT,
+                0.5
+        );
+    }
 }
